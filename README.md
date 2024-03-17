@@ -15,6 +15,12 @@ Tải kho code về, tại thư mục chứa file download.sh chạy
 bash download.sh https://url-to-playlist-files.m3u8
 ```
 
+Bạn cũng có thể chạy đa luồng để tốc độ download cao hơn
+
+```bash
+bash multi-thread/download.sh https://url-to-playlist-files.m3u8
+```
+
 ## Ghi chú
 
 Tại thời điểm hiển tại tool chỉ hỗ trợ tải các luồng phát dạng **MPEG transport stream** và không mã hóa hay giới hạn quyền, nếu bạn có các luồng khác xin vui lòng tạo issue để thảo luận.
