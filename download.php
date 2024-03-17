@@ -96,7 +96,13 @@ $size = 0;
 foreach ($urls as $url) {
     $percent = round($offset / $totalOffset * 100, 2);
 
-    echo "Segment " . $offset . "/" . $totalOffset . " \033[0;34m(" . $percent . "%)\033[0m \033[0;33m" . $speed . "\033[0m total \033[0;35m" . nv_convertfromBytes($size) . "\033[0m\n";
+    $line = "SEG: \033[0;35m" . str_pad($offset . "/" . $totalOffset, 9, ' ', STR_PAD_RIGHT) . "\033[0m";
+    $line .= "PER_TT: \033[0;34m" . str_pad($percent . "%", 12, ' ', STR_PAD_RIGHT) . "\033[0m";
+    $line .= "SP: \033[0;34m" . str_pad($speed, 15, ' ', STR_PAD_RIGHT) . "\033[0m";
+    $line .= "SZ: \033[0;32m" . str_pad(nv_convertfromBytes($size), 15, ' ', STR_PAD_RIGHT) . "\033[0m";
+
+    echo $line . "\n";
+
     $partContent = file_get_contents($url);
     if (empty ($partContent)) {
         echo "\033[0;31mCan not download segment " . number_format($offset, 0, ',', '.') . "!\033[0m";
