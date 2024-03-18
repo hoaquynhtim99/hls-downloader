@@ -7,7 +7,7 @@ $file_error = NV_ROOTDIR . '/meta/error.txt';
 
 // Lấy và check số thread
 $segOffset = intval($argv[1] ?? -1);
-if ($segOffset < 1 or $segOffset > 3) {
+if ($segOffset < 1 or $segOffset > 4) {
     $error = "Error segment offset";
     file_put_contents($file_error, $error, LOCK_EX);
     die("\033[0;31m" . $error . "!\033[0m");

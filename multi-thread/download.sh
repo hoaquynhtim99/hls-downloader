@@ -37,6 +37,7 @@ check_exist_progress() {
     "thread_1.json"
     "thread_2.json"
     "thread_3.json"
+    "thread_4.json"
     "ffmpeg_mode.txt"
     "segs_total.txt"
   )
@@ -108,12 +109,13 @@ fi
 timestamp=$(date +%s)
 echo "$timestamp" > "$DIR_PATH/meta/start.txt"
 
-# Tải 3 luồng cùng lúc
+# Tải 4 luồng cùng lúc
 php "$DIR_PATH/segment.php" 1 &
 php "$DIR_PATH/segment.php" 2 &
-php "$DIR_PATH/segment.php" 3
+php "$DIR_PATH/segment.php" 3 &
+php "$DIR_PATH/segment.php" 4
 
-# Đợi cho 3 luồng xong hết
+# Đợi cho 4 luồng xong hết
 wait
 
 if [ -f "$DIR_PATH/meta/error.txt" ]; then

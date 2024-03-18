@@ -84,13 +84,13 @@ if (empty ($urls)) {
     exit (1);
 }
 
-$chunksize = ceil(sizeof($urls) / 3);
+$chunksize = ceil(sizeof($urls) / 4);
 if ($chunksize < 2) {
     echo "\033[0;31mLess segments, please run single thread download!\033[0m";
     exit (1);
 }
 $chunks = array_chunk($urls, $chunksize, true);
-if (sizeof($chunks) !== 3) {
+if (sizeof($chunks) !== 4) {
     echo "\033[0;31mMake chunks error!\033[0m";
     exit (1);
 }
@@ -100,4 +100,5 @@ echo "Make chunks complete\n";
 file_put_contents(NV_ROOTDIR . '/meta/thread_1.json', json_encode($chunks[0], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
 file_put_contents(NV_ROOTDIR . '/meta/thread_2.json', json_encode($chunks[1], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
 file_put_contents(NV_ROOTDIR . '/meta/thread_3.json', json_encode($chunks[2], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
+file_put_contents(NV_ROOTDIR . '/meta/thread_4.json', json_encode($chunks[3], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), LOCK_EX);
 file_put_contents(NV_ROOTDIR . '/meta/segs_total.txt', sizeof($urls), LOCK_EX);
