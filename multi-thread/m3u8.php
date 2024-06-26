@@ -8,6 +8,7 @@ if (empty($url)) {
     echo "\033[0;31mNo url specified!\033[0m";
     exit (1);
 }
+$base_url = dirname($url);
 
 echo "Begin get url info\n";
 
@@ -70,7 +71,11 @@ while (($buffer = fgets($fp, 4096)) !== false) {
     }
 
     if (preg_match('/^http(s)*\:\/\//', $line)) {
+        // Dạng url tuyệt đối
         $urls[] = $line;
+    } elseif (preg_match('/.*\.ts$/', $line)) {
+        // Dạng url tương đối
+        $urls[] = $base_url . '/' . $line;
     }
 }
 if (!feof($fp)) {
