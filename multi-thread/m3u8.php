@@ -32,7 +32,8 @@ if (empty ($contentType)) {
 }
 
 $contentTypeAccepted = [
-    'application/x-mpegurl' => ['code' => 2, 'name' => 'MPEG transport stream']
+    'application/x-mpegurl' => ['code' => 2, 'name' => 'MPEG transport stream'],
+    'application/vnd.apple.mpegurl' => ['code' => 2, 'name' => 'Apple HTTP Live Streaming']
 ];
 if (!isset ($contentTypeAccepted[$contentType])) {
     echo "\033[0;31mContent-Type " . $contentType . " is not allowed!\033[0m";
@@ -73,7 +74,7 @@ while (($buffer = fgets($fp, 4096)) !== false) {
     if (preg_match('/^http(s)*\:\/\//', $line)) {
         // Dạng url tuyệt đối
         $urls[] = $line;
-    } elseif (preg_match('/.*\.ts$/', $line)) {
+    } elseif (preg_match('/.*\.(ts|png)$/', $line)) {
         // Dạng url tương đối
         $urls[] = $base_url . '/' . $line;
     }

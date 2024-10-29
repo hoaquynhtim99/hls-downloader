@@ -92,7 +92,18 @@ mkdir -p "$DIR_PATH/meta"
 mkdir -p "$DIR_PATH/data"
 
 if [[ $NEWTASK == 1 ]]; then
-  php "$DIR_PATH/m3u8.php" $1
+  URL="$1"
+  if [ -z "$URL" ]; then
+    while true; do
+      read -p "Enter URL: " URL
+      if [[ -n "$URL" ]]; then
+        break
+      else
+        echo "No URL, again"
+      fi
+    done
+  fi
+  php "$DIR_PATH/m3u8.php" $URL
   CODE=$?
   if [[ $CODE == 1 ]]; then
     # Dừng khi lỗi
