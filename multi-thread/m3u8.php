@@ -95,6 +95,9 @@ if ($chunksize < 2) {
     echo "\033[0;31mLess segments, please run single thread download!\033[0m";
     exit (1);
 }
+$urls = array_combine(array_map(function($key) {
+    return $key + 10000;
+}, array_keys($urls)), $urls);
 $chunks = array_chunk($urls, $chunksize, true);
 if (sizeof($chunks) !== 4) {
     echo "\033[0;31mMake chunks error!\033[0m";
