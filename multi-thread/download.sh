@@ -119,6 +119,7 @@ fi
 # Ghi ra timestamp bắt đầu
 timestamp=$(date +%s)
 echo "$timestamp" > "$DIR_PATH/meta/start.txt"
+echo ""
 
 # Tải 4 luồng cùng lúc
 php "$DIR_PATH/segment.php" 1 &

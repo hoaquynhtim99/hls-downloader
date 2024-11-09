@@ -87,5 +87,5 @@ foreach ($urls as $index => $url) {
     $line .= "SP: \033[0;34m" . str_pad($speed, 12, ' ', STR_PAD_RIGHT) . "\033[0m";
     $line .= "SZ: \033[0;32m" . str_pad(nv_convertfromBytes($size), 12, ' ', STR_PAD_RIGHT) . "\033[0m";
 
-    echo $line . "\n";
+    echo "\r" . $line;
 }
