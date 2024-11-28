@@ -33,6 +33,7 @@ if (empty ($contentType)) {
 
 $contentTypeAccepted = [
     'application/x-mpegurl' => ['code' => 2, 'name' => 'MPEG transport stream'],
+    'application/x-mpegurl; charset=utf-8' => ['code' => 2, 'name' => 'MPEG transport stream'],
     'application/vnd.apple.mpegurl' => ['code' => 2, 'name' => 'Apple HTTP Live Streaming']
 ];
 if (!isset ($contentTypeAccepted[$contentType])) {
