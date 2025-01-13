@@ -12,6 +12,7 @@ while [ -h "$SOURCE" ]; do
 done
 RDIR="$(dirname "$SOURCE")"
 DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+cd "$DIR/"
 
 DIR_PATH=$PWD
 
