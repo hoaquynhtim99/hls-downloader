@@ -36,7 +36,7 @@ clean_file () {
 
 clean_file
 
-php "$DIR_PATH/download.php" $1
+php "$DIR_PATH/download.php" $1 $2
 CODE=$?
 if [[ $CODE == 1 ]]; then
   # Dừng khi lỗi
