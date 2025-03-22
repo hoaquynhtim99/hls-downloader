@@ -46,6 +46,13 @@ if (file_exists(NV_ROOTDIR . '/meta/start.txt')) {
 // Lấy dung lượng đã tải về trước đó
 $size_old = getTotalFileSize(NV_ROOTDIR . '/data');
 
+$context = stream_context_create([
+    "ssl" => [
+        "verify_peer"      => false,
+        "verify_peer_name" => false,
+    ]
+]);
+
 // Tải từng segment về
 $offset = 0;
 foreach ($urls as $index => $url) {
@@ -59,7 +66,7 @@ foreach ($urls as $index => $url) {
     }
 
     // Tải về phân đoạn
-    $segContent = file_get_contents($url);
+    $segContent = file_get_contents($url, false, $context);
     if (empty ($segContent)) {
         $error = "Segment " . number_format($index, 0) . " can not download";
         file_put_contents($file_error, $error, LOCK_EX);

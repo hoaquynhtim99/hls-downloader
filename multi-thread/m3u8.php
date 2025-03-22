@@ -34,7 +34,13 @@ if ($url == 'list') {
 
     echo "Begin get url info\n";
 
-    $headers = get_headers($url);
+    $context = stream_context_create([
+        "ssl" => [
+            "verify_peer"      => false,
+            "verify_peer_name" => false,
+        ]
+    ]);
+    $headers = get_headers($url, false, $context);
     if (empty($headers)) {
         echo "\033[0;31mUnable to collect header from specified url!\033[0m";
         exit(1);
@@ -60,7 +66,7 @@ if ($url == 'list') {
 
     echo "Content-Type: \033[0;34m" . $contentTypeAccepted[$contentType]['name'] . "\033[0m\n";
 
-    $m3u8Contents = file_get_contents($url);
+    $m3u8Contents = file_get_contents($url, false, $context);
 }
 
 if (empty($m3u8Contents)) {
