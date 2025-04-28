@@ -85,7 +85,13 @@ foreach ($urls as $index => $url) {
     $percent_thread = number_format(round($offset / $totalInThread * 100, 2), 2);
     $percent_total = number_format(round($totalSegsDownloaded / $totalOffset * 100, 2), 2);
     $size = getTotalFileSize(NV_ROOTDIR . '/data') - $size_old;
-    $speed = strtolower(nv_convertfromBytes(intval($size / (time() - $startTime)))) . '/s';
+    
+    $offset = time() - $startTime;
+    if ($offset <= 0) {
+        $speed = '0b/s';
+    } else {
+        $speed = strtolower(nv_convertfromBytes(intval($size / $offset))) . '/s';
+    }
 
     // Tính toán dữ liệu xuất ra màn hình
     $line = "Thread " . $segOffset . " SEG: \033[0;35m" . str_pad($offset . "/" . $totalInThread, 9, ' ', STR_PAD_RIGHT) . "\033[0m";
