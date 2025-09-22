@@ -149,9 +149,9 @@ ffmpeg_mode=$(cat "$DIR_PATH/meta/ffmpeg_mode.txt")
 echo "Begin convert downloaded temp file to video"
 
 FILENAME="$(date +%Y-%m-%d-%H-%M).mp4"
-if [ ! -z "$2" ]; then
-  FILENAME="${2}.mp4"
-fi
+#if [ ! -z "$2" ]; then
+#  FILENAME="${2}.mp4"
+#fi
 
 if [[ "$ffmpeg_mode" == "2" ]]; then
   # MPEG transport stream => mp4

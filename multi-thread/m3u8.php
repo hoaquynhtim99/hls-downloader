@@ -100,7 +100,7 @@ while (($buffer = fgets($fp, 4096)) !== false) {
     if (preg_match('/^http(s)*\:\/\//', $line)) {
         // Dạng url tuyệt đối
         $urls[] = $line;
-    } elseif (preg_match('/.*\.(ts|png|jpg)$/', $line)) {
+    } elseif (!preg_match('/^\#/', $line)) {
         // Dạng url tương đối
         $urls[] = $base_url . '/' . $line;
     }
