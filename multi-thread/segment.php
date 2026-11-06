@@ -68,9 +68,9 @@ foreach ($urls as $index => $url) {
     // Tải về phân đoạn
     $segContent = file_get_contents($url, false, $context);
     if (empty ($segContent)) {
-        $error = "Segment " . number_format($index, 0) . " can not download";
-        file_put_contents($file_error, $error, LOCK_EX);
-        die("\033[0;31m" . $error . "!\033[0m");
+        // Bỏ qua phân đoạn lỗi, tải tiếp phân đoạn sau
+        echo "\n\033[0;33mSegment " . number_format($index, 0) . " can not download, skipped\033[0m\n";
+        continue;
     }
 
     // Ghi phân đoạn ra file

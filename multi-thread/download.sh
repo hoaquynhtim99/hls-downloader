@@ -113,28 +113,71 @@ if [[ $NEWTASK == 1 ]]; then
   fi
 fi
 
-# Xóa file ghi lỗi
-if [ -f "$DIR_PATH/meta/error.txt" ]; then
-  rm -f "$DIR_PATH/meta/error.txt"
-fi
+# Tải, nếu còn thiếu phân đoạn thì hỏi thử lại hay ghép luôn
+MISSING_REPORT=""
+while true; do
+  # Xóa file ghi lỗi
+  if [ -f "$DIR_PATH/meta/error.txt" ]; then
+    rm -f "$DIR_PATH/meta/error.txt"
+  fi
 
-# Ghi ra timestamp bắt đầu
-timestamp=$(date +%s)
-echo "$timestamp" > "$DIR_PATH/meta/start.txt"
-echo ""
+  # Ghi ra timestamp bắt đầu
+  timestamp=$(date +%s)
+  echo "$timestamp" > "$DIR_PATH/meta/start.txt"
+  echo ""
 
-# Tải 4 luồng cùng lúc
-php "$DIR_PATH/segment.php" 1 &
-php "$DIR_PATH/segment.php" 2 &
-php "$DIR_PATH/segment.php" 3 &
-php "$DIR_PATH/segment.php" 4
+  # Tải 4 luồng cùng lúc
+  php "$DIR_PATH/segment.php" 1 &
+  php "$DIR_PATH/segment.php" 2 &
+  php "$DIR_PATH/segment.php" 3 &
+  php "$DIR_PATH/segment.php" 4
 
-# Đợi cho 4 luồng xong hết
-wait
+  # Đợi cho 4 luồng xong hết
+  wait
 
-if [ -f "$DIR_PATH/meta/error.txt" ]; then
-  exit
-fi
+  if [ -f "$DIR_PATH/meta/error.txt" ]; then
+    exit
+  fi
+
+  # Kiểm tra các phân đoạn còn thiếu
+  MISSING_REPORT="$(php "$DIR_PATH/missing.php")"
+  CODE=$?
+  if [[ $CODE == 0 ]]; then
+    break
+  elif [[ $CODE != 1 && $CODE != 2 ]]; then
+    echo -e "\033[0;31m$MISSING_REPORT\033[0m"
+    exit
+  fi
+
+  echo ""
+  echo -e "\033[0;33m$MISSING_REPORT\033[0m"
+
+  RETRY=1
+  while true; do
+    if ! read -p "Retry or merge and finish [r(default):retry / m:merge and finish]? " choice; then
+      # Không có đầu vào để trả lời thì dừng, giữ lại dữ liệu đã tải
+      echo ""
+      echo "No answer, downloaded data is kept"
+      exit
+    fi
+    if [[ "$choice" = "r" || "$choice" = "R" || "$choice" = "" ]] ; then
+      break
+    elif [[ "$choice" = "m" || "$choice" = "M" ]] ; then
+      if [[ $CODE == 2 ]]; then
+        echo "No segment downloaded, nothing to merge"
+        continue
+      fi
+      RETRY=0
+      break
+    else
+      echo "Please enter r or m or leave blank"
+    fi
+  done
+
+  if [[ $RETRY == 0 ]]; then
+    break
+  fi
+done
 
 # Nối các file tải về làm 1
 echo "Begin concat downloaded segments"
@@ -156,8 +199,9 @@ FILENAME="$(date +%Y-%m-%d-%H-%M).mp4"
 if [[ "$ffmpeg_mode" == "2" ]]; then
   # MPEG transport stream => mp4
   ffmpeg -y -f mpegts -i "$DIR_PATH/data/downloaded" -c copy "$DIR_PATH/$FILENAME"
-  if [[ $? == 1 ]]; then
-    # Dừng khi lỗi
+  if [[ $? != 0 ]]; then
+    # Dừng khi lỗi, giữ lại dữ liệu đã tải
+    echo -e "\033[0;31mConvert failed, downloaded data is kept\033[0m"
     exit
   fi
 else
@@ -166,5 +210,9 @@ else
 fi
 
 clean_file
+
+if [ -n "$MISSING_REPORT" ]; then
+  echo -e "\033[0;33mVideo is incomplete\n$MISSING_REPORT\033[0m"
+fi
 
 echo -e "\033[0;32mSaved to $FILENAME!\033[0m"
